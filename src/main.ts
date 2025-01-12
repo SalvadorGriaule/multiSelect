@@ -3,7 +3,7 @@ import './app.css'
 import App from './App.svelte'
 
 const app = mount(App, {
-  target: document.getElementById('app2')!,
+  target: document.getElementById('multiSelect')!,
 })
 
 export default app
