@@ -4,9 +4,11 @@
   import DBLuxe from "./assets/luxe.json";
 
   let switchTog = $state(false);
+  let currentDB = $state(DB.data)
 
   const onclick = () => {
     switchTog = !switchTog;
+    currentDB = switchTog ? DB.data : DBLuxe.data
   };
 </script>
 
@@ -27,6 +29,6 @@
     </button>
   </div>
   <div class="p-2 shadow-2xl rounded-xl bg-white">
-    <MultiSelect dataForMS={DB.data} name="Réalisateur" />
+    <MultiSelect dataForMS={currentDB} name="Réalisateur" />
   </div>
 </main>
