@@ -83,7 +83,7 @@
       type="text"
     />
     <div
-      class="bg-white rounded-md text-black border-2 border-black border-solid"
+      class="bg-white rounded-md text-black border-2 border-black border-solid p-1"
     >
       {#each order(dataForMS) as data, i}
         <div
