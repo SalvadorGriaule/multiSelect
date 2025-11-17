@@ -3,16 +3,28 @@
   import DB from "./assets/catg.json";
   import DBLuxe from "./assets/luxe.json";
 
-  let checked = $state(false)
-  $inspect(checked)
+  let switchTog = $state(false);
+
+  const onclick = () => {
+    switchTog = !switchTog;
+  };
 </script>
 
 <main class="flex flex-col justify-center items-center h-screen bg-zinc-200">
   <div class="p-2">
-    <label for="" class="">
-      <input bind:checked={checked} type="checkbox" class="" />
-      <div class="w-20 h-8 {checked ? "bg-green-400" : "bg-slate-500"}"></div>
-    </label>
+    <button
+      {onclick}
+      aria-label="switch"
+      class="{switchTog
+        ? 'bg-green-500'
+        : 'bg-slate-500'} flex items-center p-2 h-6 w-20 rounded-xl duration-150"
+    >
+      <div
+        class="bg-slate-200 rounded-full w-4 h-4 duration-150 {switchTog
+          ? 'ml-[75%]'
+          : 'ml-0'}"
+      ></div>
+    </button>
   </div>
   <div class="p-2 shadow-2xl rounded-xl bg-white">
     <MultiSelect dataForMS={DB.data} name="Réalisateur" />
