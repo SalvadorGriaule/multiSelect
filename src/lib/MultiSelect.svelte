@@ -1,3 +1,10 @@
+<script lang="ts" module>
+  let select: Array<string | number> = $state([]);
+  export function clear () {
+    select = []
+  }
+</script>
+
 <script lang="ts">
   import type { MouseEventHandler } from "svelte/elements";
   import "../app.css";
@@ -9,16 +16,20 @@
 
   const currentMode = mode.PROD;
 
-  let { dataForMS, name }: { dataForMS: any[]; name: string } = $props();
+  let {
+    dataForMS,
+    name,
+    mainClick = false,
+  }: { dataForMS: any[]; name: string; mainClick?: boolean } = $props();
 
   let nameSelect: HTMLDivElement[] = $state([]);
-  
+
   const nameCatg: Function = (arr: Array<string>): Array<string> => {
     let out: Array<string> = [];
     for (let i = 0; i < arr.length; i++) {
       for (let j = 0; j < nameSelect.length; j++) {
         if (nameSelect[j].id == arr[i])
-          out.push(nameSelect[j].innerHTML.replace("↳", ""));
+          out.push(nameSelect[j].textContent.replace("↳", ""));
       }
     }
     return out;
@@ -28,7 +39,8 @@
     if (key != "") {
       nameSelect.forEach((elem) => {
         elem.className = "hidden";
-        if (elem.innerHTML.toLowerCase().includes(key.toLowerCase())) elem.className = "block";
+        if (elem.innerHTML.toLowerCase().includes(key.toLowerCase()))
+          elem.className = "block";
       });
     } else {
       nameSelect.forEach((elem) => (elem.className = "block"));
@@ -55,15 +67,13 @@
   const devTest: MouseEventHandler<HTMLButtonElement> = () => {
     let formTest: FormData = new FormData();
     upload(formTest);
-    console.log(formTest);
   };
 
-  let select: Array<string | number> = $state([]);
   let selected: string[] = $derived(nameCatg(select));
   let search: string = $state("");
 
   const clickDiv: Function = (id: string, elem: HTMLDivElement) => {
-    if (!select.find((elem) => elem == id)) {
+    if (select.find((elem) => elem == id) === undefined) {
       select.push(id);
       elem.classList.add("bg-blue-400");
     } else {
@@ -71,50 +81,53 @@
       elem.classList.remove("bg-blue-400");
     }
   };
-
 </script>
 
 <div class="flex flex-col space-y-2 w-full">
-  
-    <input
-      bind:value={search}
-      oninput={searchFunc(search)}
-      class="text-black border-2 border-black border-solid bg-white rounded-md"
-      type="text"
-    />
-    <div
-      class="bg-white rounded-md text-black border-2 border-black border-solid p-1"
-    >
-      {#each order(dataForMS) as data, i}
-        <div
-          bind:this={nameSelect[i]}
-          class="block text-left w-full {data.sub_id != null
-            ? 'pl-2'
-            : ''} {select.find((elem) => elem == data.id) != undefined
-            ? 'bg-blue-400'
-            : ''}"
-          id={data.id}
-          role="option"
-          aria-selected={select.find((elem) => elem == data.id) != undefined
-            ? true
-            : false}
-          tabindex={i}
-          onkeydown={(e) => {
-            if (e.key == " ") clickDiv(data.id, nameSelect[i]);
-          }}
-          onclick={() => {
+  <input
+    bind:value={search}
+    oninput={searchFunc(search)}
+    class="text-black border-2 border-black border-solid bg-white rounded-md"
+    type="text"
+  />
+  <div
+    class="bg-white rounded-md text-black border-2 border-black border-solid p-1"
+  >
+    {#each order(dataForMS) as data, i}
+      <div
+        bind:this={nameSelect[i]}
+        class="block text-left w-full {data.sub_id != null
+          ? 'pl-2'
+          : ''} {select.find((elem) => elem == data.id) != undefined
+          ? 'bg-blue-400'
+          : ''}"
+        id={data.id}
+        role="option"
+        aria-selected={select.find((elem) => elem == data.id) != undefined
+          ? true
+          : false}
+        tabindex={i}
+        onkeydown={(e) => {
+          if (e.key == " ") clickDiv(data.id, nameSelect[i]);
+        }}
+        onclick={() => {
+          if (
+            data.sub_id !== undefined ||
+            (mainClick && data.sub_id === undefined)
+          )
             clickDiv(data.id, nameSelect[i]);
-          }}
-        >
-          {data.sub_id != null ? "↳" : ""}{data.name}
-        </div>
-      {/each}
-    </div>
-    <p class="text-black">{name} sélectioner: {selected}</p>
-    {#if currentMode == mode.DEV}
-      <button class="bg-orange-400 rounded-md w-fit p-2" onclick={devTest}
-        >tester</button
+        }}
       >
-    {/if}
-  
+        <p>
+          <span class="me-1">{data.sub_id != null ? "↳" : ""}</span>{data.name}
+        </p>
+      </div>
+    {/each}
+  </div>
+  <p class="text-black">{name} sélectioner: {selected}</p>
+  {#if currentMode == mode.DEV}
+    <button class="bg-orange-400 rounded-md w-fit p-2" onclick={devTest}
+      >tester</button
+    >
+  {/if}
 </div>

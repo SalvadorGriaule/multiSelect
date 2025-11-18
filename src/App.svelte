@@ -1,14 +1,15 @@
 <script lang="ts">
-  import MultiSelect from "./lib/MultiSelect.svelte";
+  import MultiSelect, { clear } from "./lib/MultiSelect.svelte";
   import DB from "./assets/catg.json";
   import DBLuxe from "./assets/luxe.json";
 
   let switchTog = $state(false);
-  let currentDB = $state(DB.data)
+  let currentDB = $state(DB.data);
 
   const onclick = () => {
     switchTog = !switchTog;
-    currentDB = switchTog ? DB.data : DBLuxe.data
+    clear()
+    currentDB = !switchTog ? DB.data : DBLuxe.data;
   };
 </script>
 
@@ -29,6 +30,10 @@
     </button>
   </div>
   <div class="p-2 shadow-2xl rounded-xl bg-white">
-    <MultiSelect dataForMS={currentDB} name="Réalisateur" />
+    <MultiSelect
+      dataForMS={currentDB}
+      name={!switchTog ? "Réalisateur" : "Catégorie"}
+      mainClick={!switchTog ? false : true}
+    />
   </div>
 </main>
