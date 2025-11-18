@@ -96,7 +96,7 @@
     {#each order(dataForMS) as data, i}
       <div
         bind:this={nameSelect[i]}
-        class="block text-left w-full {data.sub_id != null
+        class="block text-left w-full {!mainClick && data.sub_id === undefined ? "" : "hover:bg-gray-300"} {data.sub_id != null
           ? 'pl-2'
           : ''} {select.find((elem) => elem == data.id) != undefined
           ? 'bg-blue-400'
@@ -118,7 +118,7 @@
             clickDiv(data.id, nameSelect[i]);
         }}
       >
-        <p>
+        <p class="{!mainClick && data.sub_id === undefined ? "font-bold" : "cursor-pointe"}">
           <span class="me-1">{data.sub_id != null ? "↳" : ""}</span>{data.name}
         </p>
       </div>
