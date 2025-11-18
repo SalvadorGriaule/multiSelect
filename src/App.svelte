@@ -69,9 +69,11 @@
             <p>Enable affichage</p>
           </div>
         </div>
-        {#each selected as elem}
-          <p>{elem}</p>
-        {/each}
+        <div class="border-2 border-black h-40 mt-2 rounded-lg">
+          {#each selected as elem}
+            <p>{elem}</p>
+          {/each}
+        </div>
       </div>
     </div>
   </div>
